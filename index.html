@@ -1,23 +1,20 @@
 
 <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sticker-online</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <div id="content">
     <div id="parent">
-      <!-- <div style="border-bottom:2px solid skyblue;"><img src="https://api.telegram.org/file/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/thumbnails/file_102.webp" /></div>
-      <div><img src="https://s3.bmp.ovh/imgs/2022/01/88af86978436e2e0.png"/></div>
-      <div><img src="https://s3.bmp.ovh/imgs/2022/01/c982214800b3c7a0.png" /></div>
-      <div><img src="https://s3.bmp.ovh/imgs/2022/01/4cf63813e5850e61.png"/></div>
-      <div><img src="https://s3.bmp.ovh/imgs/2022/01/0dc43b019ea85e7a.png"/></div>
-      <div><img src="https://s3.bmp.ovh/imgs/2022/01/9f4a0677ee344078.png"/></div> -->
     </div>
       </div>
 <div id="stickers_content">
 
     <div id="sticker-content"></div>
 </div>
-    
-    <script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+<script src="https://unpkg.com/better-scroll@latest/dist/better-scroll.min.js"></script>
     <script>
     // let bs =
     </script>
@@ -33,7 +30,8 @@
         `DSickerMiao_by_luxiaoxun_bot`,
         `gawrguraa`,
         `GawrGuraShark`,
-    ]
+    ];
+    let stickers_content_bsScroll = null;
 
     </script>
     <script>
@@ -48,6 +46,7 @@
             return `https://api.telegram.org/file/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/${file_path}`
         }
     async function loadStickersContent(sticker_index){
+     
         let stickers_html_template= "";
         const stcikers_data = [];
         const stickers_promise = [];
@@ -76,19 +75,31 @@
           </div>
           `
         });
-        document.querySelector("#sticker-content").insertAdjacentHTML("beforeend",stickers_html_template);
-        new BScroll(document.getElementById("stickers_content"),{
+        const isFirst = document.querySelector("#sticker-content").innerHTML;
+        document.querySelector("#sticker-content").innerHTML = stickers_html_template ;
+        if(!isFirst){
+            stickers_content_bsScroll = BetterScroll.createBScroll(document.getElementById("stickers_content"),{
         probeType:3,
         movable:true,
-        scrollY:true
-    })
+        scrollY:true,
+        scrollbar: true,
+        mouseWheel: true,
+        minSize :1,
+             });
+
+        };
+        if(stickers_content_bsScroll){
+            stickers_content_bsScroll.scrollTo(0,0);
+            stickers_content_bsScroll.refresh();
+        }
+
         console.log(stcikers_data)
         })
     }
     </script>
     <script>
         (async ()=>{
-            let sticker_thumb_html = ``;
+        let sticker_thumb_html = ``;
         for(let i of stickers_name){
             const getStickerData = await axios({
                     method:"GET",
@@ -101,14 +112,21 @@
             <div><img src="${getFileLink(file_path)}" /></div>
             `
         }
-        document.getElementById("parent").insertAdjacentHTML("beforeend",sticker_thumb_html);
-        new BScroll(document.getElementById("content"), {
-     probeType: 3,
-     movable: true,
-     scrollX: true,
+        document.getElementById("parent").innerHTML = sticker_thumb_html;
+        BetterScroll.createBScroll(document.getElementById("content"), {
+            probeType: 3,
+            movable: true,
+            scrollX: true,
+            pullUpLoad: true,
+            minSize :1,
+            scrollbar: true,  mouseWheel: true,click:true,
     });
+    let debounce_timer = setTimeout(()=>{},0);
     document.querySelectorAll("#parent >div").forEach((v,k)=>v.addEventListener("click",function(){
+        clearTimeout(debounce_timer);
+        debounce_timer = setTimeout(() => {
             loadStickersContent(k)
+        }, 1234);
         }));        
 }
         
