@@ -1,0 +1,73 @@
+*{
+    margin:0;padding:0;box-sizing:border-box;
+   }
+   body{
+     background:rgb(14, 22, 33);
+     display:flex;
+     flex-direction: column;
+     align-items: center;
+     //  place-items:center; 
+   }
+   #content{
+     margin-top:100px;
+     width:300px;
+     white-space:nowrap;
+     overflow:hidden;
+     background:rgb(23, 33, 43);
+     border-radius:3px;
+    mask-image: linear-gradient(to left, #000 70%, #0000),linear-gradient(to right, #000 70%, #0000);
+    mask-size: 50%,50%;
+    mask-position: 0 50%,100%;
+    mask-repeat: no-repeat;
+     
+     
+   }
+   #parent{
+     padding:7px 11px;
+     width:fit-content;
+     position:relative;
+     display:flex;
+     align-items:center;
+   }
+   #parent >div{
+     min-width:55px;
+     min-height:55px;
+     width: 55px;
+     height: 55px;
+     display:flex;align-items:flex-end;padding:3px;
+    
+   }
+   #parent >div:not(:last-child){
+      margin-right:14px;
+   }
+   #parent >div:active{
+     & >img{
+     transform:scale(.7); 
+   }
+   } 
+   #stickers_content{
+    margin-top: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    height: 300px;
+    width:400px;
+    border:2px solid white;
+    border-radius:7px;
+    padding: 7px;
+   }
+   #sticker-content{
+     display:flex;
+     flex-wrap:wrap;
+   }
+   #sticker-content >div {
+     min-width:65px;
+     width:75px;
+     height:75px;
+     min-height:65px;
+     padding: 3px;
+   }
+   img{
+     transition:.4s ease;
+     width:100%;
+     -webkit-user-drag: none;
+   }

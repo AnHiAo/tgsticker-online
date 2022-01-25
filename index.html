@@ -1,0 +1,121 @@
+
+<head>
+    <link rel="stylesheet" href="index.css">
+</head>
+<div id="content">
+    <div id="parent">
+      <!-- <div style="border-bottom:2px solid skyblue;"><img src="https://api.telegram.org/file/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/thumbnails/file_102.webp" /></div>
+      <div><img src="https://s3.bmp.ovh/imgs/2022/01/88af86978436e2e0.png"/></div>
+      <div><img src="https://s3.bmp.ovh/imgs/2022/01/c982214800b3c7a0.png" /></div>
+      <div><img src="https://s3.bmp.ovh/imgs/2022/01/4cf63813e5850e61.png"/></div>
+      <div><img src="https://s3.bmp.ovh/imgs/2022/01/0dc43b019ea85e7a.png"/></div>
+      <div><img src="https://s3.bmp.ovh/imgs/2022/01/9f4a0677ee344078.png"/></div> -->
+    </div>
+      </div>
+<div id="stickers_content">
+
+    <div id="sticker-content"></div>
+</div>
+    
+    <script src="https://unpkg.com/@better-scroll/core@latest/dist/core.min.js"></script>
+    <script>
+    // let bs =
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        /* first to update thumb and collect file_id */
+    const stickers_name = [
+        `AmashiroNatsukiEars_NoWord`,
+        `usaginono`,
+        `qaq00121`,
+        `sticker610026703_1_by_luxiaoxun_bot`,
+        `Kaguya_Image_by_luxiaoxun_bot`,
+        `DSickerMiao_by_luxiaoxun_bot`,
+        `gawrguraa`,
+        `GawrGuraShark`,
+    ]
+
+    </script>
+    <script>
+       async function getFIlePath(file_id){
+            const data =  await axios({
+               method:"GET",
+               url:`https://api.telegram.org/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/getFile?file_id=${file_id}`
+             });
+            return data.data.result['file_path'];
+        }
+        function getFileLink(file_path){
+            return `https://api.telegram.org/file/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/${file_path}`
+        }
+    async function loadStickersContent(sticker_index){
+        let stickers_html_template= "";
+        const stcikers_data = [];
+        const stickers_promise = [];
+        const getStickersData = await axios({
+      method:"GET",
+      url:"https://api.telegram.org/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/getStickerSet?name="+stickers_name[sticker_index],
+    });
+        for(let i of getStickersData.data.result.stickers){
+            stickers_promise.push(new Promise(resolve=>{
+             axios({
+               method:"GET",
+               url:`https://api.telegram.org/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/getFile?file_id=${i['file_id']}`
+             }).then(res=>{
+                stcikers_data.push(res.data.result['file_path']);
+            console.log("added");
+            resolve();
+             })
+            }))
+         
+        };
+        Promise.all(stickers_promise).then(res=>{
+            stcikers_data.forEach(v=>{
+          stickers_html_template +=`
+          <div>
+              <img src="https://api.telegram.org/file/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/${v}" />  
+          </div>
+          `
+        });
+        document.querySelector("#sticker-content").insertAdjacentHTML("beforeend",stickers_html_template);
+        new BScroll(document.getElementById("stickers_content"),{
+        probeType:3,
+        movable:true,
+        scrollY:true
+    })
+        console.log(stcikers_data)
+        })
+    }
+    </script>
+    <script>
+        (async ()=>{
+            let sticker_thumb_html = ``;
+        for(let i of stickers_name){
+            const getStickerData = await axios({
+                    method:"GET",
+                    url:"https://api.telegram.org/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/getStickerSet?name="+i,
+            });
+            const file_path = await getFIlePath(
+                getStickerData.data.result.thumb.file_id
+            );
+            sticker_thumb_html +=`
+            <div><img src="${getFileLink(file_path)}" /></div>
+            `
+        }
+        document.getElementById("parent").insertAdjacentHTML("beforeend",sticker_thumb_html);
+        new BScroll(document.getElementById("content"), {
+     probeType: 3,
+     movable: true,
+     scrollX: true,
+    });
+    document.querySelectorAll("#parent >div").forEach((v,k)=>v.addEventListener("click",function(){
+            loadStickersContent(k)
+        }));        
+}
+        
+        )();
+       
+    </script>
+    <script>
+     
+
+    </script>
