@@ -95,7 +95,7 @@
                     url:"https://api.telegram.org/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0/getStickerSet?name="+i,
             });
             const file_path = await getFIlePath(
-                getStickerData.data.result.thumb.file_id
+                getStickerData.data.result.thumb ? getStickerData.data.result.thumb.file_id : getStickerData.data.result.stickers[0].file_id
             );
             sticker_thumb_html +=`
             <div><img src="${getFileLink(file_path)}" /></div>
