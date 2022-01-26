@@ -34,6 +34,7 @@
     const FILE_BOT_API = `https://api.telegram.org/file/bot1842770519:AAEJ9hd3SKdq6UO2WztpKNxoDYTEELerpo0`;
     let stickers_body_bsScroll = null;
     let debounce_timer = setTimeout(()=>{},0);
+    let stickers_header_isUse = true;
     </script>
     <script>
        async function getFIlePath(file_id){
@@ -47,7 +48,8 @@
             return `${FILE_BOT_API}/${file_path}`;
         }
     async function loadStickersContent(sticker_index){
-     
+        if(!stickers_header_isUse) return;
+        stickers_header_isUse = false;
         let stickers_html_template= "";
         const stcikers_data = [];
         const stickers_promise = [];
@@ -86,7 +88,8 @@
         if(stickers_body_bsScroll){
             stickers_body_bsScroll.scrollTo(0,0);
             stickers_body_bsScroll.refresh();
-        }
+        };
+        stickers_header_isUse = true;
         })
     }
     </script>
@@ -116,7 +119,7 @@
             click:true,});
      document.querySelectorAll("#stickers-header-content >div").forEach((v,k)=>{
          v.addEventListener("click",function(){
-             this.children[0].style.animation="scaleMotion .5s";
+            this.children[0].style.animation="scaleMotion .5s";
      clearTimeout(debounce_timer);
             debounce_timer = setTimeout(() => loadStickersContent(k), 1234);  
          });
