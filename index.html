@@ -79,6 +79,7 @@
                 scrollbar: true,
                 mouseWheel: true,
                 minSize :1,
+                click:true,
              });
 
         };
@@ -114,6 +115,11 @@
             mouseWheel: true,
             click:true,});
      document.querySelectorAll("#stickers-header-content >div").forEach((v,k)=>{
+         v.addEventListener("click",function(){
+             this.children[0].style.animation="scaleMotion .5s";
+     clearTimeout(debounce_timer);
+            debounce_timer = setTimeout(() => loadStickersContent(k), 1234);  
+         });
         v.addEventListener("mousedown",function(){
             this.children[0]. style.transform=`scale(.7)`;
         });
